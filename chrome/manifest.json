@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Narrator",
+  "version": "1.0",
+  "description": "Ever wanted to have a longform article read back to you? You're in luck!",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "action": {
+    "default_icon": "icon128.png",
+    "default_popup": "pages/index.html"
+  },
+  "background": {
+    "service_worker": "worker.js",
+    "type": "module"
+  },
+  "host_permissions": [
+    "http://localhost/*",
+    "https://hellbhoy.net/*"
+  ],
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "cookies",
+    "scripting",
+    "offscreen",
+    "tabs"
+  ]
+}
