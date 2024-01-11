@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Narrator",
-  "version": "1.0",
-  "description": "Ever wanted to have a longform article read back to you? You're in luck!",
+  "name": "Reader",
+  "version": "0.1",
+  "description": "Reads highlighted text back to you.",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
