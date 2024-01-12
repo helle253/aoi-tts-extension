@@ -28,13 +28,28 @@ async function requestAudio(text, config) {
 
 // Play sound with access to DOM APIs
 async function playAudio(response, volume) {
-  const arrayBuffer = await response.arrayBuffer();
-  const audioBlob = new Blob([arrayBuffer], { type: 'audio/mp3' });
-  // Create a URL for the Blob
-  const audioUrl = URL.createObjectURL(audioBlob);
-  // Create an audio element and set its source to the blob URL
+  const mediaSource = new MediaSource();
+  const audioUrl = URL.createObjectURL(mediaSource);
   const audio = new Audio(audioUrl);
   audio.volume = volume / 100.0;
+  mediaSource.addEventListener('sourceopen', async () => {
+    console.log('onsourceopen');
+    const sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
 
-  audio.play();
+    const reader = response.body.getReader()
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) {
+        break;
+      }
+
+      console.log('appending');
+      while (sourceBuffer.updating) { sleep(2); }
+      sourceBuffer.appendBuffer(value);
+
+      if (audio.readyState == 4) {
+        audio.play();
+      }
+    }
+  });
 }
