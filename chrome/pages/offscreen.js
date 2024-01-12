@@ -1,8 +1,11 @@
 // Listen for messages from the extension
 chrome.runtime.onMessage.addListener(async (msg) => {
+  console.log('message received offscreen', msg.type)
   if (msg.type === 'synthesize') {
     const { text } = msg;
+    console.log('synthesizing', text);
     const resp = await requestAudio(text, msg.config);
+    console.log('oai response ', resp.status);
     playAudio(resp, msg.config.volume);
   };
 });
