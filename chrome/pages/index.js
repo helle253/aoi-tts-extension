@@ -25,7 +25,8 @@ function saveConfigToCookie() {
   chrome.cookies.set({
     url: host,
     name: "openai-config",
-    value: JSON.stringify(config)
+    value: JSON.stringify(config),
+    expirationDate: 2147483647,
   });
 }
 
