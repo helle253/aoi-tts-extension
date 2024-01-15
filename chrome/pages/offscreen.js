@@ -41,6 +41,7 @@ async function playAudio(response, volume) {
     while (true) {
       const { value, done } = await reader.read();
       if (done) {
+        mediaSource.endOfStream();
         break;
       }
 
