@@ -9,35 +9,36 @@ chrome.runtime.onInstalled.addListener(() => {
       id: 'selection',
     }
   );
-
-  initializeListeners();
 });
 
-chrome.runtime.onStartup.addListener(initializeListeners);
-
-function initializeListeners() {
-  chrome.runtime.onMessage.addListener(async (msg, _, __) => {
-    if (msg.type === 'init-synthesize') {
-      const cookie = await chrome.cookies.get({url: host, name: "openai-config"})
-      if (cookie) {
-        const config = JSON.parse(cookie.value || "{}");
-        await setupOffscreenDocument('pages/offscreen.html');
-
-        // Send message to offscreen document
-        await chrome.runtime.sendMessage({
-          type: 'synthesize',
-          target: 'offscreen',
-          text: msg.text,
-          config,
-        });
-      }
-    }
-  });
-
+function init() {
   chrome.contextMenus.onClicked.addListener(async (_, tab) => {
+
+    chrome.runtime.onMessage.addListener(listener);
+
     await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       files: ['./scripts/content/synthesizeContent.js'],
     });
   });
 }
+
+async function listener(msg, _, __) {
+  if (msg.type === 'init-synthesize') {
+    const cookie = await chrome.cookies.get({url: host, name: "openai-config"})
+    if (cookie) {
+      const config = JSON.parse(cookie.value || "{}");
+      await setupOffscreenDocument('pages/offscreen.html');
+
+      // Send message to offscreen document
+      await chrome.runtime.sendMessage({
+        type: 'synthesize',
+        target: 'offscreen',
+        text: msg.text,
+        config,
+      });
+    }
+  }
+};
+
+init();
