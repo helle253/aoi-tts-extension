@@ -6,31 +6,15 @@
     <title>My Chrome Extension</title>
   </head>
   <body>
-    <p>Configure OpenAI TTS Settings</p>
-    <label>
-      Model
-      <select id='model-input'>
-        <option value="tts-1" selected>tts-1</option>
-        <option value="tts-1-hd">tts-1-hd</option>
-      </select>
-    </label>
-    <label>
-      Voice
-      <select id='voice-input'>
-        <option value="alloy" selected>alloy</option>
-        <option value="echo">echo</option>
-        <option value="fable">fable</option>
-        <option value="onyx">onyx</option>
-        <option value="nova">nova</option>
-        <option value="shimmer">shimmer</option>
-      </select>
-    </label>
-    <label>
-      OpenAI API Key
-      <input type='text' id='api-key-input' />
-    </label>
-    <input type="range" min="1" max="100" value="100" class="slider" id="volume-input">
-    <button id='button'>Save Settings</button>
+    <div>
+      <p>Playback</p>
+      <div class='playback-ui'>
+        <button id='play'>Play</button>
+        <button id='pause'>Pause</button>
+        <button id='stop'>Stop</button>
+      </div>
+    </div>
+    <a href='config.html'>Settings</a>
   </body>
 </html>
 <script type='module' src='index.js' ></script>

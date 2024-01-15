@@ -1,4 +1,4 @@
-label {
-    display: block;
-    padding: 4px;
+.playback-ui {
+    display:flex;
+    flex-direction:row;
 }

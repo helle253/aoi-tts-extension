@@ -4,6 +4,10 @@ chrome.runtime.onMessage.addListener(async (msg) => {
     const { text } = msg;
     const resp = await requestAudio(text, msg.config);
     playAudio(resp, msg.config.volume);
+  } else if (msg.type === 'play') {
+    audio?.play();
+  } else if (msg.type === 'pause' || msg.type === 'stop') {
+    audio?.pause();
   };
 });
 
@@ -27,8 +31,9 @@ async function requestAudio(text, config) {
 async function playAudio(response, volume) {
   const mediaSource = new MediaSource();
   const audioUrl = URL.createObjectURL(mediaSource);
-  const audio = new Audio(audioUrl);
+  audio = new Audio(audioUrl);
   audio.volume = volume / 100.0;
+  audio.play();
   mediaSource.addEventListener('sourceopen', async () => {
     const sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
 
@@ -42,7 +47,7 @@ async function playAudio(response, volume) {
       while (sourceBuffer.updating) { sleep(2); }
       sourceBuffer.appendBuffer(value);
 
-      if (audio.readyState == 4) {
+      if (audio.readyState == 4 && !audio.paused && !audio.ended) {
         audio.play();
       }
     }
