@@ -44,7 +44,7 @@ async function playAudio(response, volume) {
         break;
       }
 
-      while (sourceBuffer.updating) { sleep(2); }
+      while (sourceBuffer.updating) { await sleep(2); }
       sourceBuffer.appendBuffer(value);
 
       if (audio.readyState == 4 && !audio.paused && !audio.ended) {
