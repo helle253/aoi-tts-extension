@@ -1,11 +1,8 @@
 // Listen for messages from the extension
 chrome.runtime.onMessage.addListener(async (msg) => {
-  console.log('message received offscreen', msg.type)
   if (msg.type === 'synthesize') {
     const { text } = msg;
-    console.log('synthesizing', text);
     const resp = await requestAudio(text, msg.config);
-    console.log('oai response ', resp.status);
     playAudio(resp, msg.config.volume);
   };
 });
@@ -33,7 +30,6 @@ async function playAudio(response, volume) {
   const audio = new Audio(audioUrl);
   audio.volume = volume / 100.0;
   mediaSource.addEventListener('sourceopen', async () => {
-    console.log('onsourceopen');
     const sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
 
     const reader = response.body.getReader()
@@ -43,7 +39,6 @@ async function playAudio(response, volume) {
         break;
       }
 
-      console.log('appending');
       while (sourceBuffer.updating) { sleep(2); }
       sourceBuffer.appendBuffer(value);
 
