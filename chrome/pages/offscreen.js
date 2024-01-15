@@ -1,3 +1,5 @@
+const sleep = ms => new Promise(res => setTimeout(res, ms));
+
 // Listen for messages from the extension
 chrome.runtime.onMessage.addListener(async (msg) => {
   if (msg.type === 'synthesize') {
