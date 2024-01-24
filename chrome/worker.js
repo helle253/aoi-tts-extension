@@ -12,33 +12,20 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 function init() {
-  chrome.contextMenus.onClicked.addListener(async (_, tab) => {
+  chrome.contextMenus.onClicked.addListener(async (context, _) => {
+    const cookie = await chrome.cookies.get({url: host, name: "openai-config"})
+    const config = JSON.parse(cookie.value || "{}");
 
-    chrome.runtime.onMessage.addListener(listener);
+    await setupOffscreenDocument('pages/offscreen.html');
 
-    await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      files: ['./scripts/content/synthesizeContent.js'],
+    await chrome.runtime.sendMessage({
+      type: 'synthesize',
+      target: 'offscreen',
+      text: context.selectionText,
+      config,
     });
   });
 }
 
-async function listener(msg, _, __) {
-  if (msg.type === 'init-synthesize') {
-    const cookie = await chrome.cookies.get({url: host, name: "openai-config"})
-    if (cookie) {
-      const config = JSON.parse(cookie.value || "{}");
-      await setupOffscreenDocument('pages/offscreen.html');
-
-      // Send message to offscreen document
-      await chrome.runtime.sendMessage({
-        type: 'synthesize',
-        target: 'offscreen',
-        text: msg.text,
-        config,
-      });
-    }
-  }
-};
 
 init();

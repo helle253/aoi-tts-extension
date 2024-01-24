@@ -21,11 +21,8 @@
     "https://hellbhoy.net/*"
   ],
   "permissions": [
-    "activeTab",
     "contextMenus",
     "cookies",
-    "scripting",
-    "offscreen",
-    "tabs"
+    "offscreen"
   ]
 }
