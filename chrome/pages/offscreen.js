@@ -36,7 +36,7 @@ async function playAudio(response, volume) {
   audio = new Audio(audioUrl);
   audio.volume = volume / 100.0;
   audio.play();
-  mediaSource.addEventListener('sourceopen', async () => {
+  mediaSource.onsourceopen = async () => {
     const sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
 
     const reader = response.body.getReader()
@@ -54,5 +54,5 @@ async function playAudio(response, volume) {
         audio.play();
       }
     }
-  });
+  };
 }
