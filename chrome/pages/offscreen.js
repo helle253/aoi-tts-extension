@@ -29,9 +29,15 @@ async function requestAudio(text, config) {
   });
 }
 
+let mediaSource;
 // Play sound with access to DOM APIs
 async function playAudio(response, volume) {
-  const mediaSource = new MediaSource();
+  if (mediaSource && (mediaSource.readyState === 'open' || mediaSource.readyState === 'ended')) {
+    while (mediaSource.sourceBuffers.length > 0) {
+      mediaSource.removeSourceBuffer(mediaSource.sourceBuffers[0]);
+    }
+  }
+  mediaSource = new MediaSource();
   const audioUrl = URL.createObjectURL(mediaSource);
   audio = new Audio(audioUrl);
   audio.volume = volume / 100.0;
