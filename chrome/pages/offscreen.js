@@ -13,6 +13,16 @@ chrome.runtime.onMessage.addListener(async (msg) => {
   };
 });
 
+async function hasSourceBuffer(mediaSource, sourceBuffer){
+  const sourceBuffers = mediaSource.sourceBuffers;
+  for (let i = 0; i < sourceBuffers.length; i++) {
+    if (sourceBuffers[i] === sourceBuffer) {
+      return true;
+    }
+  }
+  return false;
+}
+
 async function requestAudio(text, config) {
   const { apiKey, model, voice } = config;
   return fetch("https://api.openai.com/v1/audio/speech", {
@@ -46,7 +56,7 @@ async function playAudio(response, volume) {
     const sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
 
     const reader = response.body.getReader()
-    while (true) {
+    while (hasSourceBuffer(mediaSource, sourceBuffer)) {
       const { value, done } = await reader.read();
       if (done) {
         mediaSource.endOfStream();
